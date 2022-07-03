@@ -1,21 +1,21 @@
 from django.http import HttpResponse
 from django.template import loader
+from django.shortcuts import render, get_object_or_404
 
 from .models import Question
 
 def index(request):
-    latest_questions = Question.objects.order_by('-pub_date')[:5]
-    template = loader.get_template('polls/index.html')
     context = {
-        'latest_questions': latest_questions,
+        'latest_questions': Question.objects.order_by('-pub_date')[:5],
     }
-    content = template.render(context, request)
-    response = HttpResponse(content)
+    
+    response = render(request, 'polls/index.html', context)
     return response
 
 def detail(request, question_id):
-    response = f"You're viewing question {question_id}"
-    return HttpResponse(response)
+    question = get_object_or_404(Question, pk=question_id)
+    response = render(request, 'polls/detail.html', {'question': question})
+    return response
 
 def results(request, question_id):
     response = f"You're view the results of question {question_id}"
@@ -24,3 +24,4 @@ def results(request, question_id):
 def vote(request, question_id):
     response = f"You're voting on question {question_id}"
     return HttpResponse(response)
+
