@@ -7,7 +7,7 @@ from .models import Question
 
 from django.urls import reverse
 
-def create_question(question_text, days):
+def create_question(question_text, days) -> Question:
     """
     Create a question with the given `question_text` and published the
     given number of `days` offset to now (negative for questions published
@@ -15,7 +15,6 @@ def create_question(question_text, days):
     """
     time = timezone.now() + datetime.timedelta(days=days)
     return Question.objects.create(question_text=question_text, pub_date=time)
-
 
 class QuestionIndexViewTests(TestCase):
     def test_no_questions(self):
@@ -86,3 +85,23 @@ class QuestiomModelTests(TestCase):
         time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
+
+class QuestionDetailViewTests(TestCase):
+    def test_future_question(self):
+        """
+        Create a question in the future and ensure it is not visible
+        """
+        question = create_question("who dat?", 30)
+        url = reverse('polls:detail', args=(question.id,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_past_question(self):
+        """
+        Create a question in the past and ensure it is visible
+        """
+        question = create_question("who dat?", -5)
+        url = reverse('polls:detail', args=(question.id,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, question.question_text)
