@@ -27,6 +27,36 @@ class QuestionIndexViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "No polls are available")
         self.assertQuerysetEqual(response.context['latest_questions'], [])
+    def test_past_question(self):
+        """
+        Questions with a pub_date in the past are displayed on the
+        index page.
+        """
+        question1 = create_question("oldee", -30)
+        question2 = create_question("oldeer", -1)
+        response = self.client.get(reverse('polls:index'))
+        self.assertQuerysetEqual(response.context['latest_questions'], [question1, question2])
+
+    def test_future_question(self):
+        """
+        Questions with a pub_date in the future aren't displayed on
+        the index page.
+        """
+        question1 = create_question('newee', 1)
+        question2 = create_question('neweer', 2)
+        response = self.client.get(reverse('polls:index'))
+        self.assertQuerysetEqual(response.context['latest_questions'], [])
+
+
+    def test_future_question_and_past_question(self):
+        """
+        Even if both past and future questions exist, only past questions
+        are displayed.
+        """
+        question1 = create_question('newee', 1)
+        question2 = create_question('oldee', -1)
+        response = self.client.get(reverse('polls:index'))
+        self.assertQuerysetEqual(response.context['latest_questions'], [question2])
 
 class QuestiomModelTests(TestCase):
 
