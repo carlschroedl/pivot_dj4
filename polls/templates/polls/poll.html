@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <h1>{{ poll.name }}</h1>
+        <h2>{{ poll.text }}</h2>
+        <form action="{% url 'polls:vote' poll.id %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="ballot"/>
+            <input type="submit" value="Vote"/>
+        </form>
+    </body>
+</html>

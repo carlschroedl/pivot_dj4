@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <h1>Ballots</h1>
+    {% if ballot_list  %}
+        <ul>
+        {% for ballot in ballot_list %}
+            <li>{{ ballot.text }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No ballots are available</p>
+    {% endif %}
+    </body>
+</html>
