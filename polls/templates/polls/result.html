@@ -3,8 +3,12 @@
 <body>
     <h1>{{ poll.name }}</h1>
     <h2>{{ poll.text }}</h2>
+    {% if result %}
     <h2>Result</h2>
-    <h3>{{ result }}</h3>   
+    <h3>{{ result }}</h3>
+    {% else %}
+    <p>No ballots, no result.</p>
+    {% endif %}
     <h2><a href="{% url 'polls:detail' request.resolver_match.kwargs.poll_id %}">Vote</a></h2>
-        <h2><a href="{% url 'polls:ballots' request.resolver_match.kwargs.poll_id %}">Ballots</a></h2>
+    <h2><a href="{% url 'polls:ballots' request.resolver_match.kwargs.poll_id %}">Ballots</a></h2>
 </body>
