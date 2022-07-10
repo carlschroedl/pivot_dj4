@@ -12,5 +12,7 @@
     {% else %}
         <p>No ballots are available</p>
     {% endif %}
+        <h2><a href="{% url 'polls:detail' request.resolver_match.kwargs.pk %}">Vote</a></h2>
+        <h2><a href="{% url 'polls:result' request.resolver_match.kwargs.pk %}">Result</a></h2>
     </body>
 </html>

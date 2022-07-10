@@ -4,10 +4,20 @@
     <body>
         <h1>{{ poll.name }}</h1>
         <h2>{{ poll.text }}</h2>
+        <div>
+            Submit a textual <a href="https://github.com/electorama/abif/blob/main/draft01/ballot_lines.md#ordinal-ballots">ABIF Ordinal ballot</a>.
+            i.e. <pre style="display:inline;">A&gt;B&gt;C</pre>
+            ,
+            <pre style="display:inline;">A&gt;B=C</pre>
+        </div>
+        <p><em>WARNING:</em> No validation of inputs is being performed.</p>
+
         <form action="{% url 'polls:vote' poll.id %}" method="post">
             {% csrf_token %}
             <input type="text" name="ballot"/>
             <input type="submit" value="Vote"/>
         </form>
+        <h2><a href="{% url 'polls:ballots' request.resolver_match.kwargs.pk %}">Ballots</a></h2>
+        <h2><a href="{% url 'polls:result' request.resolver_match.kwargs.pk %}">Result</a></h2>
     </body>
 </html>
